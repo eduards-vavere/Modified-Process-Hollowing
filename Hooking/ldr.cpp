@@ -1,5 +1,17 @@
 #include "ldr.h"
 
+// This loader consists of several main blocks:
+
+// string_compare: This function compares two strings and returns a value indicating their relative order. It uses inline assembly to perform the comparison, which can make it harder for static analysis tools to understand what it's doing.
+
+// _findDllAddress: This function finds the base address of a DLL in memory. It does this by iterating over the loaded modules in the process until it finds the one with the matching hash. This is part of the Dynamic API Resolving technique, which makes it harder for static analysis tools to determine what the code is doing.
+
+// _findFunctionAddress: This function finds the address of a function within a DLL. It does this by looking at the export directory of the DLL and finding the function with the matching name. This is another part of the Dynamic API Resolving technique.
+
+// djb2: This function implements the djb2 hash algorithm, which is used to hash the names of the DLLs and functions. This makes it harder for static analysis tools to determine which DLLs and functions are being used.
+
+// _LoadLibrary: This function is a custom implementation of the LoadLibrary function, which is used to load a DLL into a process. It uses the _findDllAddress and _findFunctionAddress functions to find the addresses of the RtlInitUnicodeString and LdrLoadDll functions, which it then calls to load the DLL. This is a stealthy way of loading a DLL, as it doesn't use the standard LoadLibrary function.
+
 DWORD string_compare(PWSTR param1, PWSTR param2)
 {
 	DWORD _ret = 0x0;

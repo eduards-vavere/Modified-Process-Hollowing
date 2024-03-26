@@ -1,6 +1,22 @@
 #include "ph_function_defenition.h"
 
 
+// This code is hooking several Windows API functions. Here's a high-level explanation of each:
+
+// OpenProcess_engine: This function hooks the OpenProcess API function. The hook function _hookOpenProcess changes the desired access to PROCESS_ALL_ACCESS and the inherit handle flag to FALSE, effectively giving full access to the process and not allowing the handle to be inherited.
+
+// OpenThread_engine: This function hooks the OpenThread API function. The hook function _hookOpenThread changes the desired access to THREAD_ALL_ACCESS and the inherit handle flag to FALSE, giving full access to the thread and not allowing the handle to be inherited.
+
+// CreateFileA_engine: This function hooks the CreateFileA API function. The hook function _hookCreateFileA changes the desired access to GENERIC_READ and the creation disposition to OPEN_ALWAYS. It also changes the file name to be opened to "HelloWorld.exe" in the same directory as the current module.
+
+// ReadFile_engine: This function hooks the ReadFile API function. The hook function _hookReadFile does not modify any parameters and simply calls the original ReadFile function.
+
+// VirtualAllocEx_engine: This function hooks the VirtualAllocEx API function. The hook function _hookVirtualAllocEx changes the process handle, the base address, the allocation type, and the protection flags. It sets the process handle to hProcess, the base address to pPEB->ImageBaseAddress, the allocation type to MEM_COMMIT | MEM_RESERVE, and the protection flags to PAGE_EXECUTE_READWRITE.
+
+// WriteProcessMemory_engine: This function hooks the WriteProcessMemory API function. The hook function _hookWriteProcessMemory does not modify any parameters and simply calls the original WriteProcessMemory function.
+
+// ReadProcessMemory_engine: This function hooks the ReadProcessMemory API function. The hook function _hookReadProcessMemory does not modify any parameters and simply calls the original ReadProcessMemory function.
+
 HANDLE OpenProcess_engine(DWORD pid)
 {
 	SecureZeroMemory(&_hookInfo,sizeof(_HOOKINFO));
