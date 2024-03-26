@@ -37,7 +37,7 @@ HANDLE WINAPI _hookOpenProcess(
 	DWORD dwProcessId
 )
 {
-	dwDesiredAccess = PROCESS_ALL_ACCESS;
+	dwDesiredAccess = PROCESS_ALL_ACCESS; // whenever we call openprocess we will get full access
 	bInheritHandle = FALSE;
 	HANDLE ret = _orginalOpenProcess(dwDesiredAccess, bInheritHandle, dwProcessId);
 	return ret;

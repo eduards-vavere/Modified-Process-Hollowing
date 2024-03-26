@@ -12,7 +12,7 @@
 
 // _LoadLibrary: This function is a custom implementation of the LoadLibrary function, which is used to load a DLL into a process. It uses the _findDllAddress and _findFunctionAddress functions to find the addresses of the RtlInitUnicodeString and LdrLoadDll functions, which it then calls to load the DLL. This is a stealthy way of loading a DLL, as it doesn't use the standard LoadLibrary function.
 
-DWORD string_compare(PWSTR param1, PWSTR param2)
+DWORD string_compare(PWSTR param1, PWSTR param2) // aaaa = aaaa
 {
 	DWORD _ret = 0x0;
 #if defined(__x86_64__) || defined(_M_X64) 
@@ -70,7 +70,22 @@ DWORD string_compare(PWSTR param1, PWSTR param2)
 	return _ret;
 }
 
-//TEB->PEB->Ldr->InMemoryOrderLoadList->currentProgram->ntdll->kernel32.BaseDll
+// This comment is describing a path through the Windows process memory structures to find the base address of the kernel32.dll library.
+
+// Here's a high-level explanation:
+
+// TEB: Thread Environment Block. This is a data structure that contains information about the current thread.
+
+// PEB: Process Environment Block. This is a data structure that contains information about the current process. The TEB has a pointer to the PEB.
+
+// Ldr: This is a field in the PEB that points to the PEB_LDR_DATA structure, which contains information about the modules (DLLs) loaded by the process.
+
+// InMemoryOrderModuleList: This is a doubly-linked list that contains a LDR_DATA_TABLE_ENTRY for each module. The modules are sorted in the order they were loaded.
+
+// currentProgram->ntdll->kernel32.BaseDll: This seems to be describing a path through the InMemoryOrderModuleList to find the kernel32.dll module. However, it's not clear what currentProgram refers to in this context. Typically, you would traverse the InMemoryOrderModuleList until you find the LDR_DATA_TABLE_ENTRY for kernel32.dll, and then the BaseDll field would give you the base address of the DLL.
+
+// This path is likely used in the _findDllAddress function to find the base address of a DLL given its hash. The function would traverse the InMemoryOrderModuleList until it finds a DLL with a matching hash, and then return its base address.
+// //TEB->PEB->Ldr->InMemoryOrderLoadList->currentProgram->ntdll->kernel32.BaseDll
 
 DWORD _findDllAddress(unsigned int dll)
 {

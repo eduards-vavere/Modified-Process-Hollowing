@@ -3,6 +3,7 @@
 
 
 
+// dynamic/late dll calling
 DWORD _initialize(unsigned int dll_hash, LPCSTR  lpProcName, BOOL ishook) 
 {
 	DWORD _handle = NULL;
@@ -23,6 +24,7 @@ DWORD _initialize(unsigned int dll_hash, LPCSTR  lpProcName, BOOL ishook)
 		return 0x0;
 	}
 	if ((dll_hash == djb2_values[1] || dll_hash == djb2_values[7]) && ishook)
+		// compiled into call eax
 		_functionAddress = _getFunctionAddress(_functionAddress);// kernel32.dll ve advapi32.dll
 
 	_hookInfo._oldFunction = _functionAddress;
